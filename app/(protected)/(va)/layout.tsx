@@ -5,30 +5,18 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
 import { useMockRole } from "@/hooks/use-mock-role";
 import { RoleSwitcher } from "@/components/nav/RoleSwitcher";
-import { VaSidebar } from "@/components/sidebar/va-sidebar"; // Import the VA sidebar
+import { VaSidebar } from "@/components/sidebar/va-sidebar";
 import { Button } from "@/components/ui/button";
 
 export default function VaLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { role, user } = useMockRole();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-  
-  if (mounted && role !== 'va') {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/client-map'; // Redirect to trigger correct layout
-    }
-    return <div className="h-screen w-full flex items-center justify-center">Loading...</div>;
-  }
+  const { user } = useMockRole();
 
   return (
     <SidebarProvider>
-      <VaSidebar /> {/* Use the restricted VA sidebar */}
+      <VaSidebar />
       <SidebarInset>
-        {/* Header Section */}
         <header className="flex h-16 shrink-0 items-center justify-between px-6 border-b bg-background">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="-ml-1" />
@@ -56,7 +44,7 @@ export default function VaLayout({ children }: Readonly<{ children: React.ReactN
             </DropdownMenu>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-6 pt-4 overflow-y-auto">
+        <div className="flex flex-1 flex-col p-6 pt-4 overflow-y-auto">
           {children}
         </div>
       </SidebarInset>

@@ -1,21 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useMockRole } from "@/hooks/use-mock-role";
-import { ClientNavbar } from "@/components/nav/ClientNavbar"; // Import the Client navbar
+import { ClientNavbar } from "@/components/nav/ClientNavbar";
 
 export default function ClientLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { role, user } = useMockRole();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-  
-  if (mounted && role !== 'client') {
-     if (typeof window !== 'undefined') {
-      window.location.href = '/client-map'; // Redirect to trigger correct layout
-    }
-    return <div className="h-screen w-full flex items-center justify-center">Loading...</div>;
-  }
+  const { user } = useMockRole();
 
   return (
     <div className="min-h-screen bg-slate-50">

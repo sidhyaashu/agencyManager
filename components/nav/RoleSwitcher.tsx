@@ -3,16 +3,25 @@
 import { useMockRole, Role } from "@/hooks/use-mock-role";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "../ui/label";
+import { useRouter } from "next/navigation";
 
 export const RoleSwitcher = () => {
     const { role, setRole } = useMockRole();
+    const router = useRouter();
 
     const handleRoleChange = (newRole: Role) => {
-        // In a real app, you might redirect, but here we just switch context
-        // and rely on Next.js to re-render the correct layout.
-        // A page reload helps ensure the correct layout is shown if navigation is complex.
         setRole(newRole);
-        window.location.href = '/client-map'; // A common entry point
+        
+        // Navigate to the correct default page for the selected role
+        let path = '/';
+        if (newRole === 'agency-owner') {
+            path = '/client-map';
+        } else if (newRole === 'va') {
+            path = '/va-dashboard';
+        } else if (newRole === 'client') {
+            path = '/client-dashboard';
+        }
+        router.push(path);
     };
 
     return (
