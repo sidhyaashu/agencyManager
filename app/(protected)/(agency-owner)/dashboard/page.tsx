@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import AiBlock from "./_components/AiBlock";
-import ClientTable from "./_components/ClentTable";
+import ClientTable from "./_components/ClientTable";
 
 const AiSuggestionsPage = () => {
   const suggestions = [

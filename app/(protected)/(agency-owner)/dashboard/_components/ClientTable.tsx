@@ -244,13 +244,13 @@ const ClientTable = () => {
       </div>
 
       {/* ---------- Table ---------- */}
-      <div className="overflow-hidden rounded-md border">
+<div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-gray-600 font-medium">
+                  <TableHead key={header.id} className="bg-gray-50/50 text-gray-600 font-medium">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -270,8 +270,9 @@ const ClientTable = () => {
                 </TableRow>
               ))
             ) : (
+              // Enhanced Empty State
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-6 text-gray-500">
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No clients found.
                 </TableCell>
               </TableRow>
