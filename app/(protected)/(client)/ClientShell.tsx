@@ -3,7 +3,7 @@
 import { useMockRole } from "@/hooks/use-mock-role";
 import { ClientNavbar } from "@/components/nav/ClientNavbar";
 
-export default function ClientLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function ClientShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const { user } = useMockRole();
 
   return (

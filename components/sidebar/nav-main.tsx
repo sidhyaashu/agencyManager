@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import Link from "next/link"; // Import the Next.js Link component
 import {
   Collapsible,
   CollapsibleContent,
@@ -71,14 +72,15 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton
-                        asChild
-                        className="relative flex items-center text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md px-3 py-1.5 transition-all duration-200 cursor-pointer"
-                      >
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
-                      </SidebarMenuSubButton>
+                      {/* UPDATED: Replaced <a> tag with <Link> */}
+                      <Link href={subItem.url} passHref>
+                        <SidebarMenuSubButton
+                          asChild
+                          className="relative flex items-center text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md px-3 py-1.5 transition-all duration-200 cursor-pointer"
+                        >
+                          <a>{subItem.title}</a>
+                        </SidebarMenuSubButton>
+                      </Link>
                     </SidebarMenuSubItem>
                   ))}
                 </SidebarMenuSub>

@@ -6,6 +6,7 @@ import {
   Axe,
   SquareDashedKanban,
   Diameter,
+  SquareKanban,
 } from "lucide-react";
 
 import {
@@ -21,9 +22,17 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 
-// Simplified navigation for the VA
+// UPDATED: URLs are now correct for a VA
 const vaNavData = {
   navMain: [
+     {
+      title: "Dashboard",
+      url: "/va-dashboard",
+      icon: SquareKanban,
+      items: [
+        { title: "VA Home", url: "/va-dashboard" },
+      ],
+    },
     {
       title: "Tasks",
       url: "/tasks/va-open-task",
@@ -34,17 +43,16 @@ const vaNavData = {
     },
     {
       title: "Client Analytics",
-      url: "#",
+      url: "/client-wise-analytics/campaigns-analytics",
       icon: SquareDashedKanban,
       items: [
         { title: "Campaigns", url: "/client-wise-analytics/campaigns-analytics" },
         { title: "Email Accounts", url: "/client-wise-analytics/email-accounts-analytics" },
-        { title: "Leads", url: "/client-wise-analytics/leads-analytics" },
       ],
     },
     {
       title: "Managers",
-      url: "#",
+      url: "/managers/reply-manager",
       icon: Settings2,
       items: [
         { title: "Reply Manager", url: "/managers/reply-manager" },

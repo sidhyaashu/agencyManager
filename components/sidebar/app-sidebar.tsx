@@ -1,11 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link"; // Import Link
 import {
-  Bot,
-  BookOpen,
   Settings2,
-  SquareTerminal,
   Diameter,
   Axe,
   SquareDashedKanban,
@@ -25,73 +23,57 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { Button } from "../ui/button";
 
-// Sample Data
-const data = {
+// UPDATED: All URLs now point to the correct file-based routes
+const agencyNavData = {
   navMain: [
     {
-      title: "Agency Analytics",
-      url: "#",
-      icon: SquareKanban,
-      isActive: false,
-      items: [
-        { title: "History", url: "#" },
-        { title: "Starred", url: "#" },
-        { title: "Settings", url: "#" },
-      ],
-    },
-    {
       title: "Client Map",
-      url: "#",
+      url: "/client-map",
       icon: UserCog,
       items: [
-        { title: "Genesis", url: "#" },
-        { title: "Explorer", url: "#" },
-        { title: "Quantum", url: "#" },
+        { title: "Overview", url: "/client-map" },
       ],
     },
     {
       title: "Tasks",
-      url: "#",
+      url: "/tasks",
       icon: Axe,
       items: [
-        { title: "Create Tasks", url: "#" },
-        { title: "Open Tasks", url: "#" },
-        { title: "Client Setting Map", url: "#" },
+        { title: "1-Click Execute", url: "/tasks/create-task" },
+        { title: "Agency Open Tasks", url: "/tasks/agency-open-task" },
+        { title: "VA Open Tasks", url: "/tasks/va-open-task" },
+        { title: "Client Settings", url: "/tasks/client-management" },
       ],
     },
     {
       title: "Client Wise Analytics",
-      url: "#",
+      url: "/client-wise-analytics",
       icon: SquareDashedKanban,
       items: [
-        { title: "Campaings Analytics", url: "#" },
-        { title: "Email Accounts Analytics", url: "#" },
-        { title: "Leads Analytics", url: "#" },
+        { title: "Campaigns", url: "/client-wise-analytics/campaigns-analytics" },
+        { title: "Email Accounts", url: "/client-wise-analytics/email-accounts-analytics" },
+        { title: "Leads", url: "/client-wise-analytics/leads-analytics" },
       ],
     },
     {
       title: "Client Wise Automation",
-      url: "#",
+      url: "/client-wise-automation",
       icon: Workflow,
       items: [
-        { title: "Integrations ", url: "#" },
-        { title: "Manage Client Automation", url: "#" },
-        { title: "Account Vitals", url: "#" },
+        { title: "Integrations", url: "/client-wise-automation/integrations" },
       ],
     },
     {
       title: "Managers",
-      url: "#",
+      url: "/managers",
       icon: Settings2,
       items: [
-        { title: "Onboarding Manager", url: "#" },
-        { title: "Reply Manager", url: "#" },
-        { title: "Client Information Manager", url: "#" },
+        { title: "Onboarding Manager", url: "/managers/onboarding-manager" },
+        { title: "Reply Manager", url: "/managers/reply-manager" },
       ],
     },
   ],
@@ -100,14 +82,10 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      {/* Sidebar Header */}
       <SidebarHeader className="border-b border-gray-100">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
-            >
+            <SidebarMenuButton size="lg" className="cursor-pointer">
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <Diameter className="size-4" />
               </div>
@@ -119,23 +97,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
 
-      {/* Main Navigation */}
       <SidebarContent className="pt-2">
-        <NavMain items={data.navMain} />
+        <NavMain items={agencyNavData.navMain} />
       </SidebarContent>
 
-      {/* Sidebar Footer */}
       <SidebarFooter>
         <div className="flex flex-col items-center gap-3 w-full px-3 pb-4 border-t border-gray-100 pt-3">
-          <Button
-            variant="outline"
-            className="w-full rounded-full border-2 border-blue-500 text-blue-600 font-medium hover:bg-blue-50 transition-all"
-          >
-            Manage VA/Clients Access
-          </Button>
-
-          <Button className="w-full rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all">
-            CRM View
+          {/* UPDATED: CRM View button now navigates */}
+          <Button asChild className="w-full rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all">
+            <Link href="/crm-view">CRM View</Link>
           </Button>
 
           <div className="w-full rounded-2xl bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400 p-[1px] mt-1">

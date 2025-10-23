@@ -7,7 +7,10 @@ export default function ClientDashboardPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Client Dashboard</h1>
-                <Button>Create a Request</Button>
+                {/* UPDATED: Link to a new page for creating tasks */}
+                <Button asChild>
+                    <Link href="/client-tasks/new">Create a Request</Link>
+                </Button>
             </div>
             
             <Card>
@@ -27,8 +30,9 @@ export default function ClientDashboardPage() {
                 </CardHeader>
                 <CardContent>
                    <div className="flex gap-4">
-                        <Button variant="outline" asChild><Link href="#">View Campaign Analytics</Link></Button>
-                        <Button variant="outline" asChild><Link href="#">See My Requests (Tasks)</Link></Button>
+                        {/* UPDATED: Links now point to real pages */}
+                        <Button variant="outline" asChild><Link href="/client-wise-analytics/campaigns-analytics">View Campaign Analytics</Link></Button>
+                        <Button variant="outline" asChild><Link href="/client-tasks">See My Requests</Link></Button>
                    </div>
                 </CardContent>
             </Card>
