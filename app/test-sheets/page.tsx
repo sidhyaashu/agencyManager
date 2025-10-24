@@ -1,87 +1,125 @@
 "use client";
 
 import { useState } from "react";
-import { readSheetData } from "@/app/actions/googleSheetActions";
+import { 
+  listSheets,
+  createSheet,
+  readSheetData,
+  updateSheetData
+} from "@/app/actions/googleSheetActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function TestSheetsPage() {
-  const [sheetId, setSheetId] = useState("");
-  const [range, setRange] = useState("Sheet1!A1:E5"); // Default range
-  const [data, setData] = useState<any[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // State for listing sheets
+  const [sheets, setSheets] = useState<any[]>([]);
 
-  const handleFetchData = async () => {
-    setLoading(true);
+  // State for creating a sheet
+  const [newSheetTitle, setNewSheetTitle] = useState("My New Sheet from App");
+
+  // State for reading/updating a specific sheet
+  const [selectedSheetId, setSelectedSheetId] = useState("");
+  const [range, setRange] = useState("Sheet1!A1:B2");
+  const [sheetData, setSheetData] = useState<any[] | null>(null);
+
+  const handleAction = async (action: () => Promise<any>, loadingState: string, onSuccess: (data: any) => void) => {
+    setLoading(loadingState);
     setError(null);
-    setData(null);
     try {
-      const result = await readSheetData(sheetId, range);
-      setData(result || []);
+      const result = await action();
+      onSuccess(result);
+      toast.success(`${loadingState} completed successfully!`);
     } catch (err: any) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-4 md:p-8">
         <Button variant="outline" asChild className="mb-8">
             <Link href="/">Back to Home</Link>
         </Button>
-        <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle>Google Sheets API Test Page</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="space-y-2">
-                    <label htmlFor="sheetId">Google Sheet ID</label>
-                    <Input
-                        id="sheetId"
-                        placeholder="Enter Google Sheet ID"
-                        value={sheetId}
-                        onChange={(e) => setSheetId(e.target.value)}
-                    />
-                     <p className="text-xs text-gray-500">
-                        You can find this in your Google Sheet URL: /spreadsheets/d/<b>[SHEET_ID]</b>/edit
-                    </p>
-                </div>
+        <div className="space-y-8">
+            {/* 1. LIST SHEETS */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>1. List Your Google Sheets</CardTitle>
+                    <CardDescription>Fetch a list of all spreadsheets in your Google Drive.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={() => handleAction(listSheets, 'Listing Sheets', setSheets)} disabled={!!loading}>
+                        {loading === 'Listing Sheets' ? "Loading..." : "Fetch My Sheets"}
+                    </Button>
+                    {sheets.length > 0 && (
+                        <div className="mt-4 max-h-60 overflow-y-auto rounded-lg border p-4 space-y-2">
+                            {sheets.map(sheet => (
+                                <div key={sheet.id} className="text-sm p-2 bg-gray-50 rounded-md">
+                                    <p className="font-medium">{sheet.name}</p>
+                                    <p className="text-xs text-gray-500">ID: {sheet.id}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
-                <div className="space-y-2">
-                    <label htmlFor="range">Range (A1 Notation)</label>
-                    <Input
-                        id="range"
-                        placeholder="e.g., Sheet1!A1:E5"
-                        value={range}
-                        onChange={(e) => setRange(e.target.value)}
-                    />
-                </div>
-            
-                <Button onClick={handleFetchData} disabled={loading || !sheetId}>
-                    {loading ? "Loading..." : "Fetch Data from Sheet"}
-                </Button>
-
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md">
-                        <strong className="font-bold">Error: </strong>
-                        <span>{error}</span>
+            {/* 2. CREATE SHEET */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>2. Create a New Google Sheet</CardTitle>
+                </CardHeader>
+                <CardContent className="flex items-end gap-4">
+                    <div className="flex-grow space-y-2">
+                        <label htmlFor="newSheetTitle">New Sheet Title</label>
+                        <Input id="newSheetTitle" value={newSheetTitle} onChange={e => setNewSheetTitle(e.target.value)} />
                     </div>
-                )}
+                    <Button onClick={() => handleAction(() => createSheet(newSheetTitle), 'Creating Sheet', (data) => console.log('Created:', data))} disabled={!!loading}>
+                        {loading === 'Creating Sheet' ? "Creating..." : "Create Sheet"}
+                    </Button>
+                </CardContent>
+            </Card>
 
-                {data && (
-                    <div>
-                        <h3 className="font-semibold mb-2">Data Fetched:</h3>
+            {/* 3. READ & UPDATE SHEET */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>3. Read & Update a Specific Sheet</CardTitle>
+                    <CardDescription>Enter a Sheet ID (from the list above) to perform actions.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <Input placeholder="Paste Sheet ID here..." value={selectedSheetId} onChange={e => setSelectedSheetId(e.target.value)} />
+                    <Input placeholder="Range (e.g., Sheet1!A1:B2)" value={range} onChange={e => setRange(e.target.value)} />
+                    <div className="flex gap-4">
+                        <Button onClick={() => handleAction(() => readSheetData(selectedSheetId, range), 'Reading Data', setSheetData)} disabled={!!loading || !selectedSheetId}>
+                            {loading === 'Reading Data' ? "Reading..." : "Read Data"}
+                        </Button>
+                        <Button onClick={() => handleAction(() => updateSheetData(selectedSheetId, range, [["Hello", "World"], ["From", "App"]]), 'Updating Data', () => {})} disabled={!!loading || !selectedSheetId}>
+                            {loading === 'Updating Data' ? "Updating..." : "Update with 'Hello World'"}
+                        </Button>
+                    </div>
+                    {sheetData && (
                         <pre className="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto">
-                            {JSON.stringify(data, null, 2)}
+                            {JSON.stringify(sheetData, null, 2)}
                         </pre>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+                    )}
+                </CardContent>
+            </Card>
+            
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+                    <strong className="font-bold">Last Error: </strong>
+                    <span>{error}</span>
+                </div>
+            )}
+        </div>
     </div>
   );
 }
