@@ -1,7 +1,106 @@
+// "use client";
+
+// import { ChevronRight, type LucideIcon } from "lucide-react";
+// import Link from "next/link"; // Import the Next.js Link component
+// import {
+//   Collapsible,
+//   CollapsibleContent,
+//   CollapsibleTrigger,
+// } from "@/components/ui/collapsible";
+// import {
+//   SidebarGroup,
+//   SidebarGroupLabel,
+//   SidebarMenu,
+//   SidebarMenuButton,
+//   SidebarMenuItem,
+//   SidebarMenuSub,
+//   SidebarMenuSubButton,
+//   SidebarMenuSubItem,
+// } from "@/components/ui/sidebar";
+
+// export function NavMain({
+//   items,
+// }: {
+//   items: {
+//     title: string;
+//     url: string;
+//     icon?: LucideIcon;
+//     isActive?: boolean;
+//     items?: {
+//       title: string;
+//       url: string;
+//     }[];
+//   }[];
+// }) {
+//   return (
+//     <SidebarGroup>
+//       <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3 px-3">
+//         Platform
+//       </SidebarGroupLabel>
+
+//       <SidebarMenu className="space-y-1">
+//         {items.map((item) => (
+//           <Collapsible
+//             key={item.title}
+//             asChild
+//             defaultOpen={item.isActive}
+//             className="group/collapsible"
+//           >
+//             <SidebarMenuItem>
+//               {/* Trigger */}
+//               <CollapsibleTrigger asChild>
+//                 <SidebarMenuButton
+//                   tooltip={item.title}
+//                   className={`flex items-center gap-2 rounded-md px-3 py-2 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer ${
+//                     item.isActive ? "bg-blue-100 text-blue-700 font-medium" : ""
+//                   }`}
+//                 >
+//                   {item.icon && (
+//                     <item.icon
+//                       className={`h-4 w-4 transition-colors ${
+//                         item.isActive ? "text-blue-600" : "text-gray-600"
+//                       }`}
+//                     />
+//                   )}
+//                   <span className="truncate">{item.title}</span>
+//                   <ChevronRight className="ml-auto h-4 w-4 text-gray-500 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+//                 </SidebarMenuButton>
+//               </CollapsibleTrigger>
+
+//               {/* Content */}
+//               <CollapsibleContent className="mt-1 pl-8 space-y-1 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
+//                 <SidebarMenuSub>
+//                   {item.items?.map((subItem) => (
+//                     <SidebarMenuSubItem key={subItem.title}>
+//                       {/* UPDATED: Replaced <a> tag with <Link> */}
+//                       <Link href={subItem.url} passHref>
+//                         <SidebarMenuSubButton
+//                           asChild
+//                           className="relative flex items-center text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md px-3 py-1.5 transition-all duration-200 cursor-pointer"
+//                         >
+//                           <a>{subItem.title}</a>
+//                         </SidebarMenuSubButton>
+//                       </Link>
+//                     </SidebarMenuSubItem>
+//                   ))}
+//                 </SidebarMenuSub>
+//               </CollapsibleContent>
+//             </SidebarMenuItem>
+//           </Collapsible>
+//         ))}
+//       </SidebarMenu>
+//     </SidebarGroup>
+//   );
+// }
+
+
+
+
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
-import Link from "next/link"; // Import the Next.js Link component
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // 1. Import usePathname
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,6 +116,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function NavMain({
   items,
@@ -32,62 +132,50 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const pathname = usePathname(); // 2. Get the current path
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3 px-3">
-        Platform
-      </SidebarGroupLabel>
+      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarMenu>
+        {items.map((item) => {
+          // 3. Check if any sub-item is active
+          const isParentActive = item.items?.some(subItem => pathname.startsWith(subItem.url));
 
-      <SidebarMenu className="space-y-1">
-        {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={item.isActive}
-            className="group/collapsible"
-          >
-            <SidebarMenuItem>
-              {/* Trigger */}
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton
-                  tooltip={item.title}
-                  className={`flex items-center gap-2 rounded-md px-3 py-2 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 cursor-pointer ${
-                    item.isActive ? "bg-blue-100 text-blue-700 font-medium" : ""
-                  }`}
-                >
-                  {item.icon && (
-                    <item.icon
-                      className={`h-4 w-4 transition-colors ${
-                        item.isActive ? "text-blue-600" : "text-gray-600"
-                      }`}
-                    />
-                  )}
-                  <span className="truncate">{item.title}</span>
-                  <ChevronRight className="ml-auto h-4 w-4 text-gray-500 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-
-              {/* Content */}
-              <CollapsibleContent className="mt-1 pl-8 space-y-1 data-[state=open]:animate-slide-down data-[state=closed]:animate-slide-up">
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      {/* UPDATED: Replaced <a> tag with <Link> */}
-                      <Link href={subItem.url} passHref>
-                        <SidebarMenuSubButton
-                          asChild
-                          className="relative flex items-center text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md px-3 py-1.5 transition-all duration-200 cursor-pointer"
-                        >
-                          <a>{subItem.title}</a>
-                        </SidebarMenuSubButton>
-                      </Link>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+          return (
+            <Collapsible key={item.title} asChild defaultOpen={isParentActive}>
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    // 4. Apply active styles to the parent
+                    className={cn(isParentActive && "bg-blue-100 text-blue-700 font-medium")}
+                  >
+                    {item.icon && <item.icon className={cn("h-4 w-4", isParentActive && "text-blue-600")} />}
+                    <span>{item.title}</span>
+                    <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.items?.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <Link href={subItem.url} passHref>
+                          <SidebarMenuSubButton
+                            // 5. Apply active styles to the sub-item
+                            isActive={pathname === subItem.url}
+                          >
+                            <a>{subItem.title}</a>
+                          </SidebarMenuSubButton>
+                        </Link>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   );

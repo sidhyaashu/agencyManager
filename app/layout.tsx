@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { MockRoleProvider } from "@/hooks/use-mock-role"; // Import the provider
+import { MockRoleProvider } from "@/hooks/use-mock-role";
+import { WhiteLabelProvider } from "@/hooks/use-white-label"; // 1. Import the new provider
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
-        <MockRoleProvider> {/* Wrap your entire application */}
-          {children}
-        </MockRoleProvider>
+        {/* 2. Wrap the MockRoleProvider with the WhiteLabelProvider */}
+        <WhiteLabelProvider>
+          <MockRoleProvider>
+            {children}
+          </MockRoleProvider>
+        </WhiteLabelProvider>
         <Toaster />
       </body>
     </html>

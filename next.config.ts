@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "www.pngitem.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn-icons-png",
+        pathname: "/**",
+      },
     ],
   },
 };
