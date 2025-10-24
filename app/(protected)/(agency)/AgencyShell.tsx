@@ -11,7 +11,6 @@ import { useState } from "react";
 import MapClientDialog from "@/components/dialogs/MapClientDialog";
 import AISuggestionsDialog from "@/components/dialogs/AISuggestionsDialog";
 import { useMockRole } from "@/hooks/use-mock-role";
-import { RoleSwitcher } from "@/components/nav/RoleSwitcher";
 import { Button } from "@/components/ui/button";
 
 export default function AgencyShell({
@@ -37,7 +36,6 @@ export default function AgencyShell({
             </h2>
           </div>
           <div className="flex items-center gap-4">
-            <RoleSwitcher />
             {pathname.endsWith("/client-map") && (
               <Button onClick={() => setMapClientOpen(true)}>
                 Map New Client

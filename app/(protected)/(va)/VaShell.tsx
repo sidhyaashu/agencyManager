@@ -6,7 +6,6 @@ import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useMockRole } from "@/hooks/use-mock-role";
-import { RoleSwitcher } from "@/components/nav/RoleSwitcher";
 import { VaSidebar } from "@/components/sidebar/va-sidebar";
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +23,6 @@ export default function VaShell({ children }: Readonly<{ children: React.ReactNo
             <h2 className="text-lg font-medium text-gray-800">VA Dashboard</h2>
           </div>
           <div className="flex items-center gap-4">
-            <RoleSwitcher />
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5 text-gray-700" />
               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500" />
