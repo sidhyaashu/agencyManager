@@ -1,16 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 import MapClientDialog from "@/components/dialogs/MapClientDialog";
 import AISuggestionsDialog from "@/components/dialogs/AISuggestionsDialog";
-import { useMockRole } from "@/hooks/use-mock-role";
 import { Button } from "@/components/ui/button";
 
 export default function AgencyShell({
@@ -18,10 +18,12 @@ export default function AgencyShell({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user } = useMockRole();
+  const { data: session } = useSession();
   const pathname = usePathname();
   const [isMapClientOpen, setMapClientOpen] = useState(false);
   const [isAISuggestionsOpen, setAISuggestionsOpen] = useState(false);
+
+  const user = session?.user;
 
   return (
     <SidebarProvider>
@@ -32,7 +34,7 @@ export default function AgencyShell({
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="h-4" />
             <h2 className="text-lg font-medium text-gray-800 flex items-center gap-2">
-              Hello {user.name} <span className="animate-wave">👋</span>
+              Hello {user?.name} <span className="animate-wave">👋</span>
             </h2>
           </div>
           <div className="flex items-center gap-4">
@@ -52,15 +54,17 @@ export default function AgencyShell({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer h-9 w-9">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? ""} />
+                  <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() ?? 'U'}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-50">
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">Logout</DropdownMenuItem>
+                <DropdownMenuItem className="text-red-600" onClick={() => signOut()}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -1,14 +1,15 @@
 "use client";
 
-import { useMockRole } from "@/hooks/use-mock-role";
+import { useSession } from "next-auth/react";
 import { ClientNavbar } from "@/components/nav/ClientNavbar";
 
 export default function ClientShell({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { user } = useMockRole();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <div className="min-h-screen bg-slate-50">
-        <ClientNavbar userName={user.name} userAvatar={user.avatar}/>
+        <ClientNavbar userName={user?.name ?? "Client"} userAvatar={user?.image ?? undefined} />
         <main className="p-6 lg:p-8">
             {children}
         </main>

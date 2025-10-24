@@ -1,16 +1,17 @@
 "use client";
 
+import { useSession, signOut } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useMockRole } from "@/hooks/use-mock-role";
 import { VaSidebar } from "@/components/sidebar/va-sidebar";
 import { Button } from "@/components/ui/button";
 
 export default function VaShell({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { user } = useMockRole();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <SidebarProvider>
@@ -30,14 +31,16 @@ export default function VaShell({ children }: Readonly<{ children: React.ReactNo
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer h-9 w-9">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? ""} />
+                  <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() ?? 'U'}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>My Profile</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">Logout</DropdownMenuItem>
+                <DropdownMenuItem className="text-red-600" onClick={() => signOut()}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
